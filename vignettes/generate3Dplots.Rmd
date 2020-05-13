@@ -1,15 +1,19 @@
 ---
 title: "Generate 3D plots of ZooScatR shapes"
 author: "Sven Gastauer"
-date: "12/05/2020"
-output: html_document
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{Generate 3D plots from ZooScatR shapes}
+  %\usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(ZooScatR)
-library(plotly)
-library(ggplot2)
 library(zsext)
 ```
 
