@@ -1,11 +1,9 @@
-Package: simsig
+Package: zsext
 Type: Package
-Title: simsig - Broadband Signal Simulator
-Version: 0.3.0
-Date: 2019-02-02
-Author: Sven Gastauer, Dezhang Chu, Martin J. Cox
-Maintainer: Sven Gastauer <sven.gastauer@utas.edu.au>; Dezhang Chu <dezhang.chu@noaa.gov>
-Description: Simulating a broadband signal with a target.
+Title: zs_ext - ZooScatR and Misc extensions
+Version: 0.1.0
+Author@R: person("Sven", "Gastauer",email="sgastauer@ucsd.edu", role = c("aut", "cre"))
+Description: Aditional and experimental functions for the ZooScatR package or others....
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -13,11 +11,10 @@ Depends:
 	R (>= 3.0)
 Imports:
 	ggplot2,
-  	seewave,
-	signal,
+  	plotly,
+	ZooScatR,
 	shiny
 Suggests:
     knitr,
     rmarkdown
 RoxygenNote: 7.1.0
-VignetteBuilder: knitr

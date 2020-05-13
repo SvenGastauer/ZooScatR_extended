@@ -1,47 +1,49 @@
-#' plot3D function to create a 3D plot of a ZooScatR shape
-#' @description Creates a 3D plotly plot of the prolate spheroid or input shape  
+
+#############################################################################
+#############################################################################
+#' plot_3D function to create a 3D plot of a prolate spheroid
+#' @description Creates a 3D plotly plot of the prolate spheroid shape input 
 #' for ZooScatR, based on the parameters file.
 #' @param para a list of parameters as used in ZooScatR
-#' @import plotly
-#' @import ZooScatR
+#' @param  nx number of point constituing circular elements
 #' @return a plotly plot object
 #' @export
 #' @import plotly
 #' @import ZooScatR
 #' @examples 
 #' 
-plot3D <- function(para){
+plot_3D <- function(para,nx=100){
+  #build from parameters
   ppp <-  ZooScatR::buildpos(para=para)
+  #get needed info from parameters
   L = para$shape$L
-  q = ppp$x
-  x = ppp$z
-  b = L/2
-  a = (ppp$x + ppp$taper)/para$shape$L_a#ppp$x+ppp$taper/para$shape$L_a
-  y = a * sqrt(1-(x/b)^2)
+  nz <- para$simu$ni
+  #get positions from buildpos
+  x = ppp$x
+  z = ppp$z
+  #relative radius
+  y=ppp$taper/para$shape$L_a
   
-  nx <- 20
-  nz <- length(x)
+  #angles for circular elements
+  th <- seq(0, 2 * pi, length = nx)
   
-  for (i in seq(1,nz,by=5)){
-    zi <- x[i] * rep(1,nx) - min(x)
-    ri <- y[i]
-    th <- seq(0, 2 * pi, length = nx)
-    xi <- ri * cos(th)+ 0.1 
-    yi <- ri * sin(th) + 0.1 * y[i] + 2*L
-    tmp <- as.data.frame(cbind(zi,xi,yi,i))
-    if(i==1){
-      out <- tmp
-    }else{
-      out <- rbind(out,tmp)
-    }
-  }
-  xr <- diff(range(out$zi))
-  yr <- diff(range(out$xi))
-  zr <- diff(range(out$yi))
+  #circular elements
+  zi <- rep(z - min(z),each=length(th))
+  xi <- as.vector(t(apply(matrix(th),1,function(o) x + y * cos(o) + 0.1)))
+  yi <- as.vector(t(apply(matrix(th),1,function(o) x + y * sin(o) + 0.1)))
+  
+  #element number
+  i =  rep(1:length(ppp$x),each=length(th))
+  
+  #aspect ratios
+  xr <- diff(range(zi)/2)
+  yr <- diff(range(xi))/2
+  zr <- diff(range(yi))/2
   mr <- max(xr,yr,zr)
   
-  p<- plot_ly(out, x = ~zi, y = ~xi, z = ~yi, split=~i, type = 'scatter3d', mode = 'lines',
-              opacity = 0.5, line = list(width = 6, reverscale = FALSE)) %>%
+  
+  p<- plot_ly(x = ~zi * L/2, y = ~xi*L, z = ~yi*L, split=~i, type = 'scatter3d', mode = 'lines',
+              opacity = 0.5, line = list(width = 6, reverscale = FALSE,color='black')) %>%
     layout(scene = list(
       xaxis= list(title = "X (mm)",nticks = 4),
       yaxis = list(title = "Y (mm)",nticks = 4),
@@ -51,3 +53,4 @@ plot3D <- function(para){
   
   return(p)
 }
+
